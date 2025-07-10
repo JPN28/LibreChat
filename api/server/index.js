@@ -119,6 +119,7 @@ const startServer = async () => {
   app.use('/api/memories', routes.memories);
   app.use('/api/tags', routes.tags);
   app.use('/api/mcp', routes.mcp);
+  app.use('/', require('./routes/kofiWebhook'));
 
   // Add the error controller one more time after all routes
   app.use(errorController);
