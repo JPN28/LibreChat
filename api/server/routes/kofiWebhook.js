@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User'); // This path works since you're in /server/routes
+const { User } = require('~/db/models'); // This path works since you're in /server/routes
 
 const VERIFICATION_TOKEN = process.env.KOFI_VERIFICATION_TOKEN;
 

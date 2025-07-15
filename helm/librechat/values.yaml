@@ -4,38 +4,55 @@
 
 replicaCount: 1
 
-
-
 global:
-   # existing Secret for all envs/ only Passwords. Can be locally generated with: kubectl create secret generic librechat-secret-envs --from-env-file=.env.example --dry-run=client -o yaml > secret-envs.yaml
-   # For better maintainabillity, you can put all vars directly in the config Section and only overwrite Secrets with this if nessesary.
-   # Required Values:
-   # - MEILI_MASTER_KEY
+  # existing Secret for all envs/ only Passwords. Can be locally generated with: kubectl create secret generic librechat-secret-envs --from-env-file=.env.example --dry-run=client -o yaml > secret-envs.yaml
+  # For better maintainabillity, you can put all vars directly in the config Section and only overwrite Secrets with this if nessesary.
+  # Required Values:
+  # - MEILI_MASTER_KEY
   librechat:
-    existingSecretName: "librechat-credentials-env"
+    existingSecretName: 'librechat-credentials-env'
     # Used for Setting the Right Key, can be something like AZURE_API_KEY, if Azure OpenAI is used
     existingSecretApiKey: OPENAI_API_KEY
 
 librechat:
+  # IMPORTANT -- GENERATE your own: openssl rand -hex 32 and openssl rand -hex 16 for CREDS_IV.
+  # Best Practice: Put into Secret. See global.librechat.existingSecretName
   configEnv:
     PLUGIN_MODELS: gpt-4,gpt-4-turbo-preview,gpt-4-0125-preview,gpt-4-1106-preview,gpt-4-0613,gpt-3.5-turbo,gpt-3.5-turbo-0125,gpt-3.5-turbo-1106,gpt-3.5-turbo-0613
-    DEBUG_PLUGINS: "true"
-    # IMPORTANT -- GENERATE your own: openssl rand -hex 32 and openssl rand -hex 16 for CREDS_IV. Best Practise: Put into Secret. See gloobal.librechat.existingSecretName
+    DEBUG_PLUGINS: 'true'
     CREDS_KEY: 9e95d9894da7e68dd69c0046caf5343c8b1e80c89609b5a1e40e6568b5b23ce6
     CREDS_IV: ac028c86ba23f4cd48165e0ca9f2c683
     JWT_SECRET: 16f8c0ef4a5d391b26034086c628469d3f9f497f08163ab9b40137092f2909ef
     JWT_REFRESH_SECRET: eaa5191f2914e30b9387fd84e254e4ba6fc51b4654968a9b0803b456a54b8418
-    # Set Config Params here
-    # ENV_NAME: env-value
+  existingSecretName: 'librechat-credentials-env'
 
-    # existing Secret for all envs/ only Passwords. Can be locally generated with: kubectl create secret generic librechat-secret-envs --from-env-file=.env.example --dry-run=client -o yaml > secret-envs.yaml
-    # For better maintainabillity, you can put all vars directly in the config Section and only overwrite Secrets with this if nessesary.
-    # Required Values:
-    # - MEILI_MASTER_KEY
-  existingSecretName: "librechat-credentials-env"
-  
-  # For adding a custom config yaml-file you can set the contents in this var. See https://www.librechat.ai/docs/configuration/librechat_yaml/example
-  configYamlContent: ""
+  configYamlContent: |
+    version: '1.0'
+
+    limits:
+      LITE:
+        defaultModel: gpt-4o
+        allowedModels: [gpt-4o]
+        maxTokens: 25000
+        vision: true
+        webAccess: true
+        pdf: 3
+
+      STUDENT:
+        defaultModel: gpt-4o
+        allowedModels: [gpt-4o, claude-sonnet]
+        maxTokens: 300000
+        vision: true
+        webAccess: true
+        pdf: 50
+
+      EXTREME:
+        defaultModel: gpt-4o
+        allowedModels: [gpt-4o, claude-sonnet]
+        maxTokens: 600000
+        vision: true
+        webAccess: true
+        pdf: 100
   # configYamlContent: |
   #   version: 1.0.8
 
@@ -53,7 +70,7 @@ librechat:
   #       openNewTab: true
 
   #   registration:
-  #     socialLogins: ["discord", "facebook", "github", "google", "openid"] 
+  #     socialLogins: ["discord", "facebook", "github", "google", "openid"]
   #   endpoints:
   #     azureOpenAI:
   #      # Endpoint-level configuration
@@ -87,14 +104,14 @@ librechat:
   #         modelDisplayLabel: "OpenRouter"
 
   # name of existing Yaml configmap, key must be librechat.yaml
-  existingConfigYaml: ""
+  existingConfigYaml: ''
 
   # Volume used to store image Files uploaded to the Web UI
   imageVolume:
     enabled: true
     size: 10G
     accessModes: ReadWriteOnce
-    # storageClassName: 
+    # storageClassName:
 
 # only lite RAG is supported
 librechat-rag-api:
@@ -102,27 +119,22 @@ librechat-rag-api:
   # can be azure, openai, huggingface or huggingfacetei
   embeddingsProvider: openai
 
-
 image:
   repository: danny-avila/librechat
   registry: ghcr.io
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
+  tag: ''
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
+nameOverride: ''
+fullnameOverride: ''
 
 lifecycle: {}
 # # base for adding a custom banner // see https://github.com/danny-avila/LibreChat/pull/3952 for an example
 #   postStart:
 #     exec:
 #       command: ["/bin/sh", "-c", "npm run update-banner <displayFrom(Format: yyyy-mm-ddTHH:MM:SSZ)> <displayTo(Format: yyyy-mm-ddTHH:MM:SSZ)> <message> <isPublic(true/false)>"]
-
-
 
 podAnnotations: {}
 podLabels: {}
@@ -133,7 +145,7 @@ podSecurityContext:
 securityContext:
   capabilities:
     drop:
-    - ALL
+      - ALL
   # readOnlyRootFilesystem: true # not supported yet
   runAsNonRoot: true
   runAsUser: 1000
@@ -145,7 +157,7 @@ service:
 
 ingress:
   enabled: true
-  className: ""
+  className: ''
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -170,7 +182,6 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
 
 autoscaling:
   enabled: false
@@ -217,18 +228,17 @@ mongodb:
   auth:
     enabled: false
   databases:
-   - LibreChat
-#  persistence: 
+    - LibreChat
+#  persistence:
 #    size: 8Gi
-
 
 meilisearch:
   enabled: true
   persistence:
     enabled: true
-    storageClass: ""
-  image: 
-    tag: "v1.7.3"
+    storageClass: ''
+  image:
+    tag: 'v1.7.3'
   auth:
     # Use an existing Kubernetes secret for the MEILI_MASTER_KEY
-    existingMasterKeySecret: "librechat-credentials-env"
+    existingMasterKeySecret: 'librechat-credentials-env'
