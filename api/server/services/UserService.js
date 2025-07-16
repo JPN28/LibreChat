@@ -2,7 +2,7 @@ const { logger } = require('@librechat/data-schemas');
 const { encrypt, decrypt } = require('@librechat/api');
 const { ErrorTypes } = require('librechat-data-provider');
 const { updateUser } = require('~/models');
-const { Key } = require('~/db/models');
+const { Key, User } = require('~/db/models');
 
 /**
  * Updates the plugins for a user based on the action specified (install/uninstall).
@@ -172,6 +172,18 @@ const checkUserKeyExpiry = (expiresAt, endpoint) => {
   }
 };
 
+const findUserByEmail = async (email) => {
+  return await User.findOne({ email });
+};
+
+const updateUserRoleByEmail = async (email, role) => {
+  return await User.findOneAndUpdate(
+    { email },
+    { $set: { role } },
+    { new: true }
+  );
+};
+
 module.exports = {
   getUserKey,
   updateUserKey,
@@ -180,4 +192,6 @@ module.exports = {
   getUserKeyExpiry,
   checkUserKeyExpiry,
   updateUserPluginsService,
+  findUserByEmail,
+  updateUserRoleByEmail,
 };

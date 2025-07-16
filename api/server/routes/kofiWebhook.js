@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('~/db/models'); // This path works since you're in /server/routes
+const UserService = require('../services/UserService');
 
 const VERIFICATION_TOKEN = process.env.KOFI_VERIFICATION_TOKEN;
 
@@ -16,7 +16,7 @@ router.post('/webhook/kofi', async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email });
+    const user = await UserService.findUserByEmail(email);
 
     if (!user) {
       return res.status(404).send('User not found');
@@ -38,8 +38,7 @@ router.post('/webhook/kofi', async (req, res) => {
         return res.status(400).send('Unknown tier');
     }
 
-    user.role = newRole;
-    await user.save();
+    await UserService.updateUserRoleByEmail(email, newRole);
 
     res.send('Role updated');
   } catch (error) {
