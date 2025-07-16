@@ -2,28 +2,3 @@ version: '1.0'
 
 interface:
   title: LibreChat
-
-limits:
-  LITE:
-    defaultModel: gpt-4o
-    allowedModels: [gpt-4o]
-    maxTokens: 25000
-    vision: true
-    webAccess: true
-    pdf: 3
-
-  STUDENT:
-    defaultModel: gpt-4o
-    allowedModels: [gpt-4o, claude-sonnet]
-    maxTokens: 300000
-    vision: true
-    webAccess: true
-    pdf: 50
-
-  EXTREME:
-    defaultModel: gpt-4o
-    allowedModels: [gpt-4o, claude-sonnet]
-    maxTokens: 600000
-    vision: true
-    webAccess: true
-    pdf: 100
