@@ -29,6 +29,9 @@ librechat:
   configYamlContent: |
     version: '1.0'
 
+    interface:
+      title: LibreChat
+
     limits:
       LITE:
         defaultModel: gpt-4o
