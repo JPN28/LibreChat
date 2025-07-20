@@ -1,47 +1,47 @@
-version: '1.2.4' # Use the appropriate config version as a string
+version: '1.2.4'
+
 interface:
-  title: 'LibreChat'
+  title: LibreChat
 
-# Define tier-specific limits for users
-limits:
-  LITE:
-    defaultModel: gpt-4o
-    allowedModels: [gpt-4o]
-    maxTokens: 25000
-    vision: true
-    webAccess: true
-    pdf: 3
+x-tierConfig:
+  limits:
+    LITE:
+      defaultModel: gpt-4o
+      allowedModels: [gpt-4o]
+      maxTokens: 25000
+      vision: true
+      webAccess: true
+      pdf: 3
 
-  STUDENT:
-    defaultModel: gpt-4o
-    allowedModels: [gpt-4o, claude-sonnet-4-20250514]
-    maxTokens: 300000
-    vision: true
-    webAccess: true
-    pdf: 50
+    STUDENT:
+      defaultModel: gpt-4o
+      allowedModels: [gpt-4o, claude-sonnet-4-20250514]
+      maxTokens: 300000
+      vision: true
+      webAccess: true
+      pdf: 50
 
-  EXTREME:
-    defaultModel: gpt-4o
-    allowedModels: [gpt-4o, claude-sonnet-4-20250514]
-    maxTokens: 600000
-    vision: true
-    webAccess: true
-    pdf: 100
+    EXTREME:
+      defaultModel: gpt-4o
+      allowedModels: [gpt-4o, claude-sonnet-4-20250514]
+      maxTokens: 600000
+      vision: true
+      webAccess: true
+      pdf: 100
 
-# Define models and assign which roles can use them
-models:
-  - id: gpt-4o
-    name: GPT-4o
-    provider: openai
-    default: true
-    roles:
-      - LITE
-      - STUDENT
-      - EXTREME
+  models:
+    - id: gpt-4o
+      name: GPT-4o
+      provider: openai
+      default: true
+      roles:
+        - LITE
+        - STUDENT
+        - EXTREME
 
-  - id: claude-sonnet-4-20250514
-    name: Claude Sonnet
-    provider: anthropic
-    roles:
-      - STUDENT
-      - EXTREME
+    - id: claude-sonnet-4-20250514
+      name: Claude Sonnet
+      provider: anthropic
+      roles:
+        - STUDENT
+        - EXTREME
